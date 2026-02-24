@@ -23,7 +23,10 @@ A terminal-based session manager for SSH connections, supporting two-step naviga
      sudo mv sshmenu /usr/local/bin/
      ```
 
-2. **Create or edit `sshmenu.yaml` in the same directory as the binary.**
+2. **Configuration file location:**
+   - By default, SSHMenu will look for the configuration file at `~/.config/sshmenu/sshmenu.yaml`.
+   - If that file does not exist, it will use `sshmenu.yaml` in the same directory as the binary.
+   - You can copy or move your configuration file to either location as needed.
 
 ### Run
 #### Two-step UI (project → server)

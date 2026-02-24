@@ -87,16 +87,26 @@ func main() {
 	// Clear the terminal screen at the start
 	fmt.Print("\033[2J\033[H")
 
-	exePath, err := os.Executable()
+	// Prefer ~/.config/sshmenu/sshmenu.yaml if it exists, else use next to binary
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Println("Error determining executable path:", err)
+		fmt.Println("Error determining user home directory:", err)
 		os.Exit(1)
 	}
-	exeDir := exePath
-	if idx := strings.LastIndex(exePath, string(os.PathSeparator)); idx != -1 {
-		exeDir = exePath[:idx]
+	userConfigPath := homeDir + string(os.PathSeparator) + ".config" + string(os.PathSeparator) + "sshmenu" + string(os.PathSeparator) + "sshmenu.yaml"
+	configPath := userConfigPath
+	if _, err := os.Stat(userConfigPath); os.IsNotExist(err) {
+		exePath, err := os.Executable()
+		if err != nil {
+			fmt.Println("Error determining executable path:", err)
+			os.Exit(1)
+		}
+		exeDir := exePath
+		if idx := strings.LastIndex(exePath, string(os.PathSeparator)); idx != -1 {
+			exeDir = exePath[:idx]
+		}
+		configPath = exeDir + string(os.PathSeparator) + "sshmenu.yaml"
 	}
-	configPath := exeDir + string(os.PathSeparator) + "sshmenu.yaml"
 	cfg, err := loadConfig(configPath)
 	if err != nil {
 		fmt.Println("Error loading config:", err)
