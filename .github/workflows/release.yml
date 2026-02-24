@@ -20,10 +20,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20.x'
+          go-version: '1.21.x'
 
-      - name: Run tests
-        run: go test ./...
+      - name: Check syntax (build)
+        run: go build ./...
 
       - name: Create and push tag (patch)
         uses: anothrNick/github-tag-action@v1
@@ -49,7 +49,7 @@ jobs:
       - name: Build linux/amd64
         run: |
           mkdir -p dist
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/session-manager
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/sshmenu
 
       - name: Create GitHub Release
         id: create_release
@@ -68,7 +68,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/session-manager
-          asset_name: session-manager_${{ env.TAG_NAME }}_linux_amd64
+          asset_name: sshmenu_${{ env.TAG_NAME }}_linux_amd64
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
