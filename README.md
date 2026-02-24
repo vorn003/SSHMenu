@@ -5,8 +5,8 @@ A terminal-based session manager for SSH connections, supporting two-step naviga
 ## Features
 - Two-step UI: Select project, then server (when no filter is used)
 - Flat filtered list: Search servers by name or description using a command-line parameter
-- Inplace update: Reloads YAML config on each action
 - Custom SSH commands per server or global command template
+- Inplace update
 
 ## Usage
 ### Installation
