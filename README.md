@@ -61,10 +61,16 @@ projects:
 ## Navigation
 - Use ↑/↓ to navigate
 - Enter to select
-- ⏻ Quit to exit
-- ⬅ Back returns to project selection
 
-### Build yourself
+## Command-line options
+| Option              | Description                              |
+|---------------------|------------------------------------------|
+| sshmenu [search]    | Launch menu, optionally filter servers    |
+| --help              | Show help message                        |
+| --update            | Update to latest release from GitHub      |
+| --version           | Show version                             |
+
+## Build yourself
 ```
 go build -o sshmenu sshmenu.go
 ```
