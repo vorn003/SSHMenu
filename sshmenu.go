@@ -177,14 +177,20 @@ Usage:
 				os.Exit(1)
 			}
 			if tmpSum != exeSum {
-				// Move the temporary file to the executable location
-				err = os.Rename(tmpFile, exePath)
-				if err != nil {
-					fmt.Println("Error replacing executable:", err)
-					os.Exit(1)
-				}
-				fmt.Printf("Update complete. Previous version: %s\n", Version)
-				os.Exit(0)
+				   // Move the temporary file to the executable location
+				   err = os.Rename(tmpFile, exePath)
+				   if err != nil {
+					   fmt.Println("Error replacing executable:", err)
+					   os.Exit(1)
+				   }
+				   fmt.Printf("Update complete. New version: ")
+				   newVersionCmd := exec.Command(exePath, "--version")
+				   newVersionCmd.Stdout = os.Stdout
+				   newVersionCmd.Stderr = os.Stderr
+				   if err := newVersionCmd.Run(); err != nil {
+					   fmt.Println("(error running updated binary to show version)")
+				   }
+				   os.Exit(0)
 			} else {
 				fmt.Printf("No update needed, already on version: %s\n", Version)
 				os.Remove(tmpFile)
