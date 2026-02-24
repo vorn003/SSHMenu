@@ -1,0 +1,15 @@
+global_command: ssh {server}
+projects:
+
+    - name: Customer A
+      servers:
+        - name: server1
+          description: App A Server 1
+        - name: server2
+          description: App B Server 2
+
+    - name: Customer B
+      servers:
+        - name: server3
+          description: App C Server 3
+          command: ssh server3 -p 2222
