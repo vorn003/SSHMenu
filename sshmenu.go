@@ -3,13 +3,23 @@ package main
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 
+	"crypto/md5"
 	"github.com/manifoldco/promptui"
 	"gopkg.in/yaml.v3"
 )
+
+// Version is set at build time using -ldflags
+var Version = "dev"
+
+// httpGet wraps http.Get for update functionality
+func httpGet(url string) (*http.Response, error) {
+	return http.Get(url)
+}
 
 // discardWriteCloser wraps io.Discard to satisfy io.WriteCloser
 type discardWriteCloser struct{}
@@ -87,6 +97,102 @@ func main() {
 	// Clear the terminal screen at the start
 	fmt.Print("\033[2J\033[H")
 
+	// Handle --help, --update, --version
+	args := os.Args[1:]
+	if len(args) > 0 {
+		if args[0] == "--help" {
+			fmt.Printf(`SSHMenu - Interactive SSH launcher
+			
+Version: %s
+Usage:
+	sshmenu [search]
+	sshmenu --help         Show this help message
+	sshmenu --update       Update to latest release from GitHub
+	sshmenu --version      Show version
+`, Version)
+			os.Exit(0)
+		}
+		if args[0] == "--version" {
+			fmt.Println(Version)
+			os.Exit(0)
+		}
+		if args[0] == "--update" {
+			// Download latest release from GitHub and replace current binary
+			updateURL := "https://github.com/vorn003/SSHMenu/releases/latest/download/sshmenu_linux_amd64"
+			exePath, err := os.Executable()
+			if err != nil {
+				fmt.Println("Error determining executable path:", err)
+				os.Exit(1)
+			}
+			// Download to a temporary file in the same directory as the executable
+			exeDir := exePath
+			if idx := strings.LastIndex(exePath, string(os.PathSeparator)); idx != -1 {
+				exeDir = exePath[:idx]
+			}
+			tmpFile := exeDir + string(os.PathSeparator) + ".sshmenu_update_tmp"
+			fmt.Println("Downloading latest release...")
+			resp, err := httpGet(updateURL)
+			if err != nil {
+				fmt.Println("Download failed:", err)
+				os.Exit(1)
+			}
+			defer resp.Body.Close()
+			ct := resp.Header.Get("Content-Type")
+			if strings.Contains(ct, "text/html") {
+				fmt.Println("Error: Downloaded file is HTML, not a binary. Check the release URL or authentication.")
+				os.Exit(2)
+			}
+			out, err := os.OpenFile(tmpFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
+			if err != nil {
+				fmt.Println("Error creating temporary file for update:", err)
+				os.Exit(1)
+			}
+			defer out.Close()
+			_, err = io.Copy(out, resp.Body)
+			if err != nil {
+				fmt.Println("Error writing update:", err)
+				os.Exit(1)
+			}
+			// Compare md5sum of tempfile and current binary
+			md5sum := func(path string) (string, error) {
+				f, err := os.Open(path)
+				if err != nil {
+					return "", err
+				}
+				defer f.Close()
+				h := md5.New()
+				if _, err := io.Copy(h, f); err != nil {
+					return "", err
+				}
+				return fmt.Sprintf("%x", h.Sum(nil)), nil
+			}
+			tmpSum, err := md5sum(tmpFile)
+			if err != nil {
+				fmt.Println("Error computing md5sum for tempfile:", err)
+				os.Exit(1)
+			}
+			exeSum, err := md5sum(exePath)
+			if err != nil {
+				fmt.Println("Error computing md5sum for executable:", err)
+				os.Exit(1)
+			}
+			if tmpSum != exeSum {
+				// Move the temporary file to the executable location
+				err = os.Rename(tmpFile, exePath)
+				if err != nil {
+					fmt.Println("Error replacing executable:", err)
+					os.Exit(1)
+				}
+				fmt.Printf("Update complete. Previous version: %s\n", Version)
+				os.Exit(0)
+			} else {
+				fmt.Printf("No update needed, already on version: %s\n", Version)
+				os.Remove(tmpFile)
+				os.Exit(0)
+			}
+		}
+	}
+
 	// Prefer ~/.config/sshmenu/sshmenu.yaml if it exists, else use next to binary
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -117,10 +223,11 @@ func main() {
 	filteredStdout := bellFilter{w: os.Stdout}
 
 	searchString := ""
-	// Support search parameter from command line
-	if len(os.Args) > 1 {
-		searchString = strings.Join(os.Args[1:], " ")
+	// Support search parameter from command line (ignore --help/--update)
+	if len(args) > 0 && args[0] != "--help" && args[0] != "--update" {
+		searchString = strings.Join(args, " ")
 	}
+
 	for {
 		// Reload config for inplace update
 		cfg, err = loadConfig(configPath)
@@ -273,7 +380,7 @@ func main() {
 			}
 			// After server selection, exit
 			return
-ProjectSelect:
+		ProjectSelect:
 			// Restart project selection loop
 			continue
 		}
