@@ -87,12 +87,16 @@ func main() {
 	// Clear the terminal screen at the start
 	fmt.Print("\033[2J\033[H")
 
-	cwd, err := os.Getwd()
+	exePath, err := os.Executable()
 	if err != nil {
-		fmt.Println("Error determining working directory:", err)
+		fmt.Println("Error determining executable path:", err)
 		os.Exit(1)
 	}
-	configPath := cwd + string(os.PathSeparator) + "sshmenu.yaml"
+	exeDir := exePath
+	if idx := strings.LastIndex(exePath, string(os.PathSeparator)); idx != -1 {
+		exeDir = exePath[:idx]
+	}
+	configPath := exeDir + string(os.PathSeparator) + "sshmenu.yaml"
 	cfg, err := loadConfig(configPath)
 	if err != nil {
 		fmt.Println("Error loading config:", err)
