@@ -28,7 +28,7 @@ jobs:
       - name: Create and push tag (patch)
         uses: anothrNick/github-tag-action@v1
         with:
-          default_bump: patch
+          DEFAULT_BUMP: patch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
