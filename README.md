@@ -75,5 +75,27 @@ projects:
 go build -o sshmenu sshmenu.go
 ```
 
+**Build without linking to libc (static, pure-Go build)**
+
+To produce a Linux binary that does not link against the system `libc` (avoid cgo), build with `CGO_ENABLED=0`. This uses the pure-Go resolver and avoids depending on system C libraries.
+
+Example (Linux amd64):
+
+```
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags "-s -w" -o sshmenu ./...
+```
+
+Or use the provided Makefile target:
+
+```
+make build
+```
+
+Notes:
+- `CGO_ENABLED=0` disables cgo so the binary will not be linked against `libc`.
+- `-tags netgo` forces the pure-Go DNS resolver (avoid cgo-based name resolution).
+- `-ldflags "-s -w"` strips debug info to reduce binary size.
+
+
 ## License
 MIT

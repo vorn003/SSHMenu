@@ -264,11 +264,12 @@ Usage:
 
 			// Select server from flat list
 			serverPrompt := promptui.Select{
-				Label:    "Select Server",
-				Items:    serverNames,
-				HideHelp: true,
-				Size:     50,
-				Stdout:   filteredStdout,
+				Label:       "Select Server",
+				Items:       serverNames,
+				HideHelp:    true,
+				HideSelected: true,
+				Size:        50,
+				Stdout:      filteredStdout,
 			}
 			sidx, sresult, err := serverPrompt.Run()
 			fmt.Print("\r\033[K")
@@ -313,11 +314,12 @@ Usage:
 
 			fmt.Println("Use ↑/↓ to navigate, Enter to select. Select '⏻ Quit' to exit.")
 			projectPrompt := promptui.Select{
-				Label:    "Select Project",
-				Items:    projectNames,
-				HideHelp: true,
-				Size:     50,
-				Stdout:   filteredStdout,
+				Label:        "Select Project",
+				Items:        projectNames,
+				HideHelp:     true,
+				HideSelected: true,
+				Size:         50,
+				Stdout:       filteredStdout,
 			}
 			pidx, presult, err := projectPrompt.Run()
 			fmt.Print("\r\033[K")
@@ -345,11 +347,12 @@ Usage:
 			serverNames = append(serverNames, "\u2B05 Back") // ⬅ Back
 			for {
 				serverPrompt := promptui.Select{
-					Label:    "Select Server",
-					Items:    serverNames,
-					HideHelp: true,
-					Size:     50,
-					Stdout:   filteredStdout,
+					Label:        "Select Server",
+					Items:        serverNames,
+					HideHelp:     true,
+					HideSelected: true,
+					Size:         50,
+					Stdout:       filteredStdout,
 				}
 				sidx, sresult, err := serverPrompt.Run()
 				fmt.Print("\r\033[K")

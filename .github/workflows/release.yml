@@ -54,7 +54,7 @@ jobs:
       - name: Build linux/amd64
         run: |
           mkdir -p dist
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X 'main.Version=${{ steps.set_tag.outputs.TAG_NAME }}'" -o dist/sshmenu
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags="-s -w -X 'main.Version=${{ steps.set_tag.outputs.TAG_NAME }}'" -o dist/sshmenu
 
       - name: Create GitHub Release
         id: create_release
