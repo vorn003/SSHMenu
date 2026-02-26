@@ -48,8 +48,8 @@ jobs:
             exit 1
           fi
           VERSION=${TAG#v}
-          echo "::set-output name=TAG_NAME::$TAG"
-          echo "::set-output name=VERSION::$VERSION"
+          echo "TAG_NAME=$TAG" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build linux/amd64
         run: |
