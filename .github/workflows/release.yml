@@ -54,14 +54,14 @@ jobs:
       - name: Build linux/amd64
         run: |
           mkdir -p dist
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags="-s -w -X 'main.Version=${{ steps.set_tag.outputs.TAG_NAME }}'" -o dist/sshmenu
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags="-s -w -X 'main.Version=${{ steps.set_tag.outputs.TAG_NAME }}'" -o dist/sshmenu_linux_amd64
 
       - name: Create GitHub Release and upload asset
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.set_tag.outputs.TAG_NAME }}
           name: ${{ steps.set_tag.outputs.VERSION }}
-          artifacts: dist/sshmenu
+          artifacts: dist/sshmenu_linux_amd64
           draft: false
           prerelease: false
         env:
