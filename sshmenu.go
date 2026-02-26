@@ -183,16 +183,10 @@ Usage:
 					fmt.Println("Error replacing executable:", err)
 					os.Exit(1)
 				}
-				fmt.Printf("Update complete. New version: ")
-				newVersionCmd := exec.Command(exePath, "--version")
-				newVersionCmd.Stdout = os.Stdout
-				newVersionCmd.Stderr = os.Stderr
-				if err := newVersionCmd.Run(); err != nil {
-					fmt.Println("(error running updated binary to show version)")
-				}
+				fmt.Printf("Update complete.")
 				os.Exit(0)
 			} else {
-				fmt.Printf("No update needed, already on version: %s\n", Version)
+				fmt.Printf("No update needed, already on latest version: %s\n", Version)
 				os.Remove(tmpFile)
 				os.Exit(0)
 			}
