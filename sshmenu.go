@@ -234,6 +234,9 @@ Usage:
 		searchString = strings.Join(args, " ")
 	}
 
+	// Print help line for navigation once per program run (avoid duplicates on Back)
+	printedHelp := false
+
 	for {
 		// Reload config for inplace update
 		cfg, err = loadConfig(configPath)
@@ -312,7 +315,10 @@ Usage:
 			}
 			projectNames = append(projectNames, "\u23FB Quit") // ⏻ Quit
 
-			fmt.Println("Use ↑/↓ to navigate, Enter to select. Select '⏻ Quit' to exit.")
+			if !printedHelp {
+				fmt.Println("Use ↑/↓ to navigate, Enter to select. Select '⏻ Quit' to exit.")
+				printedHelp = true
+			}
 			projectPrompt := promptui.Select{
 				Label:        "Select Project",
 				Items:        projectNames,
