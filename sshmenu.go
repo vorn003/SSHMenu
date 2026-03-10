@@ -232,9 +232,6 @@ Usage:
 		searchString = strings.Join(args, " ")
 	}
 
-	// Print help line for navigation once per program run (avoid duplicates on Back)
-	printedHelp := false
-
 	for {
 		// Reload config for inplace update
 		cfg, err = loadConfig(configPath)
@@ -313,12 +310,8 @@ Usage:
 			}
 			projectNames = append(projectNames, quitLabel)
 
-			if !printedHelp {
-				fmt.Println("Use ↑/↓ to navigate, Enter to select. Select '" + quitLabel + "' to exit.")
-				printedHelp = true
-			}
 			projectPrompt := promptui.Select{
-				Label:        "Select Project",
+				Label:        "Select Project (↑/↓ navigate, ✗ to quit)",
 				Items:        projectNames,
 				HideHelp:     true,
 				HideSelected: true,
@@ -369,7 +362,6 @@ Usage:
 					break
 				}
 				if sresult == backLabel {
-					// Return to project selection
 					goto ProjectSelect
 				}
 				// Only proceed if a real server was selected
