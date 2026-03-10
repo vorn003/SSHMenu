@@ -44,7 +44,7 @@ A terminal-based session manager for SSH connections, supporting two-step naviga
 Example:
 ```yaml
 global_command: pamssh {server}
-exit_on_disconnect: false  # Set to true to exit directly after SSH disconnects (two-layer mode)
+exit_on_disconnect: true  # Set to false to return directly into SSHMenu after disconnecting SSH session
 projects:
   - name: Customer A
     servers:
@@ -63,7 +63,7 @@ projects:
 | Option               | Type   | Default | Description                                                                 |
 |----------------------|--------|---------|-----------------------------------------------------------------------------|
 | `global_command`     | string | —       | Command template for servers without a custom command. Use `{server}` as placeholder. |
-| `exit_on_disconnect` | bool   | `false` | When `true`, exit sshmenu immediately after an SSH session ends (two-layer mode). When `false`, return to the server selection menu. |
+| `exit_on_disconnect` | bool   | `true`  | When `true`, exit sshmenu immediately after an SSH session ends (two-layer mode). When `false`, return to the server selection menu. |
 
 ### Per-Server Options
 | Option        | Type   | Description                                          |

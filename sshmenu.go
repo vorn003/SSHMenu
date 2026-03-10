@@ -76,7 +76,7 @@ type Project struct {
 
 type Config struct {
 	GlobalCommand    string    `yaml:"global_command"`
-	ExitOnDisconnect bool      `yaml:"exit_on_disconnect"`
+	ExitOnDisconnect *bool     `yaml:"exit_on_disconnect"`
 	Projects         []Project `yaml:"projects"`
 }
 
@@ -387,7 +387,7 @@ Usage:
 				if err := cmd.Run(); err != nil {
 					fmt.Println("Command failed:", err)
 				}
-				if cfg.ExitOnDisconnect {
+				if cfg.ExitOnDisconnect == nil || *cfg.ExitOnDisconnect {
 					return
 				}
 			}

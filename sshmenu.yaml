@@ -1,5 +1,5 @@
 global_command: ssh {server}
-# exit_on_disconnect: true  # Exit directly after SSH disconnects instead of returning to the menu
+# exit_on_disconnect: false  # Set to false to return to SSHMenu after disconnecting instead of exiting
 projects:
 
     - name: Customer A
