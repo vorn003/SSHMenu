@@ -98,9 +98,6 @@ func loadConfig(path string) (*Config, error) {
 }
 
 func main() {
-	// Clear the terminal screen at the start
-	fmt.Print("\033[2J\033[H")
-
 	// Handle --help, --update, --version
 	args := os.Args[1:]
 	if len(args) > 0 {
@@ -222,6 +219,9 @@ Usage:
 		fmt.Println("Error loading config:", err)
 		os.Exit(1)
 	}
+
+	// Clear the terminal screen before showing the menu
+	fmt.Print("\033[2J\033[H")
 
 	// Create a bell-filtered writer that wraps the real stdout
 	filteredStdout := bellFilter{w: os.Stdout}
