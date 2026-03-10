@@ -44,7 +44,7 @@ A terminal-based session manager for SSH connections, supporting two-step naviga
 Example:
 ```yaml
 global_command: pamssh {server}
-exit_on_disconnect: true  # Set to false to return directly into SSHMenu after disconnecting SSH session
+# exit_on_disconnect: false  # Set to false to return to SSHMenu after disconnecting instead of exiting
 projects:
   - name: Customer A
     servers:
