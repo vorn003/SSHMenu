@@ -43,7 +43,7 @@ A terminal-based session manager for SSH connections, supporting two-step naviga
 ## Config File: sshmenu.yaml
 Example:
 ```yaml
-global_command: pamssh {server}
+global_command: ssh {server}
 # exit_on_disconnect: false  # Set to false to return to SSHMenu after disconnecting instead of exiting
 projects:
   - name: Customer A
